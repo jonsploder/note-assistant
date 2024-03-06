@@ -22,3 +22,37 @@ and presenting data transformations to spark connection between ideas.
 - Import/export functionality (various formats).
 - Integration potential with external tools.
 - Analytics on note-taking patterns.
+
+# Database structure design
+
+### Notes Table
+| Column Name    | Data Type                 | Constraints             |
+|----------------|---------------------------|-------------------------|
+| note_id        | SERIAL PRIMARY KEY       |                          |
+| content        | TEXT                      |                         |
+| creation_date  | TIMESTAMP                 |                         |
+| last_modified  | TIMESTAMP                 |                         |
+| obsolete       | BOOLEAN DEFAULT FALSE     |                         |
+| source_book    | TEXT                      |                         |
+
+### Tags Table
+| Column Name    | Data Type                 | Constraints             |
+|----------------|---------------------------|-------------------------|
+| tag_id         | SERIAL PRIMARY KEY       |                          |
+| tag_name       | TEXT UNIQUE               |                         |
+
+### Notes_Tags (Many-to-many Relationship)
+| Column Name    | Data Type                 | Constraints               |
+|----------------|---------------------------|---------------------------|
+| note_id        | INT FOREIGN KEY           | REFERENCES notes(note_id) |
+| tag_id         | INT FOREIGN KEY           | REFERENCES tags(tag_id)   |
+
+### Supporting Tables (Optional)
+
+#### Aggregation History Table
+| Column Name        | Data Type                 | Constraints               |
+|--------------------|---------------------------|---------------------------|
+| aggregation_id     | SERIAL PRIMARY KEY        |                           |
+| original_note_id   | INT                       | REFERENCES notes(note_id) |
+| aggregated_note_id | INT                       | REFERENCES notes(note_id) |
+| aggregation_date   | TIMESTAMP                 |                           |
